@@ -1,0 +1,1635 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Le Festin | Restaurant Gastronomique</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+  :root {
+    --gold: #C9A84C;
+    --gold-light: #E8C97A;
+    --gold-dark: #9B7A2A;
+    --noir: #0D0D0D;
+    --noir-2: #161616;
+    --noir-3: #1E1E1E;
+    --noir-4: #2A2A2A;
+    --cream: #F5F0E8;
+    --cream-2: #EDE7D9;
+    --white: #FFFFFF;
+    --text-muted: #999;
+    --red: #E74C3C;
+    --green: #25D366;
+    --facebook: #1877F2;
+    --instagram: #E4405F;
+    --tiktok: #010101;
+    --shadow-gold: 0 0 40px rgba(201,168,76,0.15);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--noir);
+    color: var(--cream);
+    font-family: 'Outfit', sans-serif;
+    overflow-x: hidden;
+    cursor: none;
+  }
+
+  /* CUSTOM CURSOR */
+  .cursor {
+    width: 10px; height: 10px;
+    background: var(--gold);
+    border-radius: 50%;
+    position: fixed; top: 0; left: 0;
+    pointer-events: none; z-index: 99999;
+    transform: translate(-50%,-50%);
+    transition: transform 0.1s, width 0.2s, height 0.2s, background 0.2s;
+  }
+  .cursor-ring {
+    width: 36px; height: 36px;
+    border: 1.5px solid var(--gold);
+    border-radius: 50%;
+    position: fixed; top: 0; left: 0;
+    pointer-events: none; z-index: 99998;
+    transform: translate(-50%,-50%);
+    transition: transform 0.15s ease, width 0.2s, height 0.2s;
+    opacity: 0.6;
+  }
+  body:hover .cursor { opacity: 1; }
+
+  /* SCROLLBAR */
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: var(--noir); }
+  ::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 2px; }
+
+  /* LOADER */
+  .loader {
+    position: fixed; inset: 0;
+    background: var(--noir);
+    z-index: 9999;
+    display: flex; align-items: center; justify-content: center;
+    flex-direction: column; gap: 20px;
+    transition: opacity 0.6s ease, visibility 0.6s;
+  }
+  .loader.hidden { opacity: 0; visibility: hidden; }
+  .loader-logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 3rem; color: var(--gold);
+    letter-spacing: 0.2em;
+    animation: pulse 1.5s infinite;
+  }
+  .loader-bar {
+    width: 200px; height: 2px;
+    background: var(--noir-4);
+    border-radius: 2px; overflow: hidden;
+  }
+  .loader-fill {
+    height: 100%; background: linear-gradient(90deg, var(--gold-dark), var(--gold-light));
+    animation: fill 1.8s ease forwards;
+  }
+  @keyframes fill { from { width: 0 } to { width: 100% } }
+  @keyframes pulse { 0%,100% { opacity:1 } 50% { opacity:0.5 } }
+
+  /* NAVBAR */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0;
+    z-index: 1000;
+    padding: 0 5%;
+    display: flex; align-items: center; justify-content: space-between;
+    height: 72px;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    background: rgba(13,13,13,0.85);
+    border-bottom: 1px solid rgba(201,168,76,0.12);
+    transition: all 0.3s;
+  }
+  nav.scrolled {
+    height: 60px;
+    background: rgba(13,13,13,0.97);
+  }
+  .nav-logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.5rem; font-weight: 900;
+    color: var(--gold);
+    letter-spacing: 0.15em;
+    text-decoration: none;
+  }
+  .nav-logo span { color: var(--cream); font-weight: 400; font-style: italic; }
+  .nav-links {
+    display: flex; gap: 36px; list-style: none;
+  }
+  .nav-links a {
+    color: var(--cream-2); text-decoration: none;
+    font-size: 0.82rem; font-weight: 500;
+    letter-spacing: 0.12em; text-transform: uppercase;
+    transition: color 0.3s;
+    position: relative;
+  }
+  .nav-links a::after {
+    content: '';
+    position: absolute; bottom: -4px; left: 0;
+    width: 0; height: 1px;
+    background: var(--gold);
+    transition: width 0.3s;
+  }
+  .nav-links a:hover { color: var(--gold); }
+  .nav-links a:hover::after { width: 100%; }
+  .nav-cta {
+    background: var(--gold);
+    color: var(--noir) !important;
+    padding: 9px 22px;
+    border-radius: 2px;
+    font-weight: 600 !important;
+    letter-spacing: 0.08em !important;
+    transition: background 0.3s, transform 0.2s !important;
+  }
+  .nav-cta::after { display: none !important; }
+  .nav-cta:hover { background: var(--gold-light) !important; transform: translateY(-1px); }
+
+  /* HAMBURGER */
+  .hamburger {
+    display: none; flex-direction: column;
+    gap: 5px; cursor: pointer; padding: 4px;
+  }
+  .hamburger span {
+    display: block; width: 26px; height: 2px;
+    background: var(--cream); border-radius: 2px;
+    transition: all 0.3s;
+  }
+  .hamburger.active span:nth-child(1) { transform: rotate(45deg) translate(5px, 5px); }
+  .hamburger.active span:nth-child(2) { opacity: 0; }
+  .hamburger.active span:nth-child(3) { transform: rotate(-45deg) translate(5px, -5px); }
+
+  /* MOBILE MENU */
+  .mobile-menu {
+    display: none;
+    position: fixed; inset: 0; top: 60px;
+    background: rgba(13,13,13,0.98);
+    z-index: 999;
+    flex-direction: column; align-items: center; justify-content: center;
+    gap: 30px;
+  }
+  .mobile-menu.active { display: flex; }
+  .mobile-menu a {
+    color: var(--cream); text-decoration: none;
+    font-size: 1.6rem; font-family: 'Playfair Display', serif;
+    transition: color 0.3s;
+  }
+  .mobile-menu a:hover { color: var(--gold); }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    display: flex; align-items: center;
+    position: relative; overflow: hidden;
+    padding-top: 72px;
+  }
+  .hero-bg {
+    position: absolute; inset: 0;
+    background: 
+      linear-gradient(135deg, rgba(13,13,13,0.92) 0%, rgba(13,13,13,0.7) 50%, rgba(13,13,13,0.88) 100%),
+      url('https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=1800&q=80') center/cover;
+    background-attachment: fixed;
+  }
+  .hero-bg::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse at 70% 50%, rgba(201,168,76,0.08) 0%, transparent 60%);
+  }
+  .hero-ornament {
+    position: absolute; right: 8%; top: 50%;
+    transform: translateY(-50%);
+    width: 420px; height: 420px;
+    border: 1px solid rgba(201,168,76,0.12);
+    border-radius: 50%;
+    pointer-events: none;
+  }
+  .hero-ornament::before {
+    content: '';
+    position: absolute; inset: 24px;
+    border: 1px solid rgba(201,168,76,0.08);
+    border-radius: 50%;
+  }
+  .hero-ornament::after {
+    content: '';
+    position: absolute; inset: 50px;
+    border: 1px solid rgba(201,168,76,0.05);
+    border-radius: 50%;
+  }
+  .hero-content {
+    position: relative; z-index: 2;
+    padding: 0 8%;
+    max-width: 700px;
+  }
+  .hero-tag {
+    display: inline-flex; align-items: center; gap: 10px;
+    color: var(--gold); font-size: 0.78rem;
+    letter-spacing: 0.3em; text-transform: uppercase;
+    margin-bottom: 24px;
+    opacity: 0; transform: translateY(20px);
+    animation: fadeUp 0.8s 0.5s forwards;
+  }
+  .hero-tag::before, .hero-tag::after {
+    content: ''; display: block;
+    width: 30px; height: 1px;
+    background: var(--gold);
+  }
+  .hero-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.8rem, 6vw, 5.2rem);
+    font-weight: 900; line-height: 1.1;
+    margin-bottom: 24px;
+    opacity: 0; transform: translateY(30px);
+    animation: fadeUp 0.8s 0.7s forwards;
+  }
+  .hero-title em {
+    color: var(--gold); font-style: italic;
+    display: block;
+  }
+  .hero-desc {
+    font-size: 1.05rem; font-weight: 300;
+    color: rgba(245,240,232,0.75);
+    line-height: 1.8; max-width: 480px;
+    margin-bottom: 40px;
+    opacity: 0; transform: translateY(30px);
+    animation: fadeUp 0.8s 0.9s forwards;
+  }
+  .hero-actions {
+    display: flex; gap: 16px; flex-wrap: wrap;
+    opacity: 0; transform: translateY(30px);
+    animation: fadeUp 0.8s 1.1s forwards;
+  }
+  .btn-primary {
+    background: var(--gold);
+    color: var(--noir);
+    padding: 14px 32px;
+    border: none; border-radius: 2px;
+    font-family: 'Outfit', sans-serif;
+    font-size: 0.85rem; font-weight: 600;
+    letter-spacing: 0.12em; text-transform: uppercase;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.3s;
+    display: inline-flex; align-items: center; gap: 10px;
+  }
+  .btn-primary:hover {
+    background: var(--gold-light);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 30px rgba(201,168,76,0.3);
+  }
+  .btn-outline {
+    background: transparent;
+    color: var(--cream);
+    padding: 14px 32px;
+    border: 1px solid rgba(245,240,232,0.3);
+    border-radius: 2px;
+    font-family: 'Outfit', sans-serif;
+    font-size: 0.85rem; font-weight: 500;
+    letter-spacing: 0.12em; text-transform: uppercase;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.3s;
+    display: inline-flex; align-items: center; gap: 10px;
+  }
+  .btn-outline:hover {
+    border-color: var(--gold);
+    color: var(--gold);
+    transform: translateY(-2px);
+  }
+  .hero-stats {
+    position: absolute; bottom: 0; left: 0; right: 0;
+    display: flex; justify-content: center;
+    padding: 28px 8%;
+    background: linear-gradient(to top, rgba(13,13,13,0.95), transparent);
+    gap: 60px; flex-wrap: wrap;
+  }
+  .stat-item { text-align: center; }
+  .stat-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 2rem; font-weight: 700;
+    color: var(--gold); display: block;
+  }
+  .stat-label {
+    font-size: 0.72rem; letter-spacing: 0.2em;
+    text-transform: uppercase; color: var(--text-muted);
+    margin-top: 4px;
+  }
+
+  /* SECTION BASE */
+  section { padding: 100px 8%; }
+  .section-tag {
+    display: inline-flex; align-items: center; gap: 12px;
+    color: var(--gold); font-size: 0.72rem;
+    letter-spacing: 0.3em; text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+  .section-tag::before {
+    content: ''; display: block;
+    width: 36px; height: 1px;
+    background: var(--gold);
+  }
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2rem, 4vw, 3.2rem);
+    font-weight: 900; line-height: 1.15;
+    margin-bottom: 16px;
+  }
+  .section-sub {
+    color: rgba(245,240,232,0.6);
+    font-size: 1rem; font-weight: 300;
+    line-height: 1.8; max-width: 500px;
+    margin-bottom: 50px;
+  }
+  .gold-line {
+    width: 60px; height: 2px;
+    background: linear-gradient(90deg, var(--gold), transparent);
+    margin: 16px 0 40px;
+  }
+
+  /* MENU SECTION */
+  #menu { background: var(--noir-2); }
+  .menu-tabs {
+    display: flex; gap: 8px; flex-wrap: wrap;
+    margin-bottom: 48px;
+  }
+  .tab-btn {
+    padding: 10px 24px;
+    border: 1px solid rgba(201,168,76,0.2);
+    background: transparent;
+    color: var(--text-muted);
+    font-family: 'Outfit', sans-serif;
+    font-size: 0.8rem; font-weight: 500;
+    letter-spacing: 0.15em; text-transform: uppercase;
+    border-radius: 2px; cursor: pointer;
+    transition: all 0.3s;
+  }
+  .tab-btn:hover, .tab-btn.active {
+    background: var(--gold);
+    border-color: var(--gold);
+    color: var(--noir);
+  }
+  .menu-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
+    gap: 2px;
+  }
+  .menu-item {
+    position: relative; overflow: hidden;
+    background: var(--noir-3);
+    transition: transform 0.4s;
+    display: none;
+    flex-direction: column;
+  }
+  .menu-item.visible { display: flex; }
+  .menu-item:hover { transform: scale(1.01); z-index: 2; }
+  .menu-img {
+    width: 100%; height: 220px;
+    object-fit: cover;
+    transition: transform 0.5s;
+    filter: brightness(0.9);
+  }
+  .menu-item:hover .menu-img { transform: scale(1.06); filter: brightness(1); }
+  .menu-badge {
+    position: absolute; top: 14px; right: 14px;
+    background: var(--gold);
+    color: var(--noir);
+    font-size: 0.68rem; font-weight: 700;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    padding: 5px 10px; border-radius: 2px;
+  }
+  .menu-badge.new { background: var(--red); color: var(--white); }
+  .menu-info { padding: 20px; flex: 1; display: flex; flex-direction: column; }
+  .menu-cat {
+    font-size: 0.68rem; letter-spacing: 0.2em;
+    text-transform: uppercase; color: var(--gold);
+    margin-bottom: 6px;
+  }
+  .menu-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.2rem; font-weight: 700;
+    margin-bottom: 8px; line-height: 1.3;
+  }
+  .menu-desc {
+    font-size: 0.82rem; color: var(--text-muted);
+    line-height: 1.6; flex: 1;
+  }
+  .menu-footer {
+    display: flex; align-items: center;
+    justify-content: space-between;
+    margin-top: 16px; padding-top: 16px;
+    border-top: 1px solid rgba(255,255,255,0.06);
+  }
+  .menu-price {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.4rem; color: var(--gold); font-weight: 700;
+  }
+  .menu-price span { font-size: 0.75rem; font-weight: 300; color: var(--text-muted); }
+  .add-btn {
+    width: 38px; height: 38px;
+    background: var(--gold);
+    border: none; border-radius: 50%;
+    color: var(--noir); font-size: 1.2rem;
+    cursor: pointer; transition: all 0.3s;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .add-btn:hover { background: var(--gold-light); transform: rotate(90deg) scale(1.1); }
+  .order-bar {
+    position: fixed; bottom: 24px; left: 50%;
+    transform: translateX(-50%);
+    background: var(--gold);
+    color: var(--noir);
+    padding: 14px 32px;
+    border-radius: 50px;
+    display: flex; align-items: center; gap: 14px;
+    box-shadow: 0 8px 40px rgba(201,168,76,0.4);
+    cursor: pointer; z-index: 200;
+    font-weight: 600; font-size: 0.9rem;
+    white-space: nowrap;
+    transition: all 0.3s;
+    opacity: 0; pointer-events: none;
+  }
+  .order-bar.visible { opacity: 1; pointer-events: auto; }
+  .order-bar:hover { background: var(--gold-light); transform: translateX(-50%) translateY(-2px); }
+  .order-count {
+    background: var(--noir);
+    color: var(--gold);
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.8rem; font-weight: 700;
+  }
+
+  /* GALLERY */
+  #gallery { background: var(--noir); }
+  .gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    grid-template-rows: repeat(3, 200px);
+    gap: 3px;
+  }
+  .gallery-item {
+    overflow: hidden; position: relative;
+    cursor: pointer;
+  }
+  .gallery-item:nth-child(1) { grid-column: 1/6; grid-row: 1/3; }
+  .gallery-item:nth-child(2) { grid-column: 6/9; grid-row: 1/2; }
+  .gallery-item:nth-child(3) { grid-column: 9/13; grid-row: 1/2; }
+  .gallery-item:nth-child(4) { grid-column: 6/9; grid-row: 2/3; }
+  .gallery-item:nth-child(5) { grid-column: 9/13; grid-row: 2/3; }
+  .gallery-item:nth-child(6) { grid-column: 1/5; grid-row: 3/4; }
+  .gallery-item:nth-child(7) { grid-column: 5/9; grid-row: 3/4; }
+  .gallery-item:nth-child(8) { grid-column: 9/13; grid-row: 3/4; }
+  .gallery-img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s, filter 0.5s;
+    filter: brightness(0.85) saturate(1.1);
+  }
+  .gallery-overlay {
+    position: absolute; inset: 0;
+    background: rgba(13,13,13,0);
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.4s;
+  }
+  .gallery-overlay i {
+    color: var(--white); font-size: 2rem;
+    opacity: 0; transform: scale(0.5);
+    transition: all 0.4s;
+  }
+  .gallery-item:hover .gallery-img { transform: scale(1.08); filter: brightness(0.7); }
+  .gallery-item:hover .gallery-overlay { background: rgba(13,13,13,0.4); }
+  .gallery-item:hover .gallery-overlay i { opacity: 1; transform: scale(1); }
+
+  /* LIGHTBOX */
+  .lightbox {
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.95);
+    z-index: 9000;
+    display: flex; align-items: center; justify-content: center;
+    opacity: 0; pointer-events: none;
+    transition: opacity 0.3s;
+  }
+  .lightbox.open { opacity: 1; pointer-events: auto; }
+  .lightbox img {
+    max-width: 90vw; max-height: 85vh;
+    object-fit: contain;
+    border: 1px solid rgba(201,168,76,0.2);
+  }
+  .lightbox-close {
+    position: absolute; top: 24px; right: 30px;
+    color: var(--cream); font-size: 2rem;
+    cursor: pointer; transition: color 0.3s;
+  }
+  .lightbox-close:hover { color: var(--gold); }
+
+  /* RESERVATION */
+  #reservation {
+    background: var(--noir-2);
+    position: relative; overflow: hidden;
+  }
+  #reservation::before {
+    content: '';
+    position: absolute; right: -200px; top: -200px;
+    width: 600px; height: 600px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(201,168,76,0.05) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .reservation-wrap {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 80px; align-items: start;
+  }
+  .res-form {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+  .res-form .full { grid-column: 1/-1; }
+  .form-group { display: flex; flex-direction: column; gap: 8px; }
+  .form-label {
+    font-size: 0.72rem; letter-spacing: 0.2em;
+    text-transform: uppercase; color: var(--gold);
+  }
+  .form-input {
+    background: var(--noir-3);
+    border: 1px solid rgba(201,168,76,0.15);
+    color: var(--cream);
+    padding: 13px 16px;
+    border-radius: 2px;
+    font-family: 'Outfit', sans-serif;
+    font-size: 0.9rem;
+    transition: border-color 0.3s, box-shadow 0.3s;
+    outline: none;
+    width: 100%;
+  }
+  .form-input:focus {
+    border-color: var(--gold);
+    box-shadow: 0 0 0 3px rgba(201,168,76,0.1);
+  }
+  .form-input::placeholder { color: rgba(245,240,232,0.3); }
+  select.form-input option { background: var(--noir-3); }
+  .btn-submit {
+    background: var(--gold);
+    color: var(--noir);
+    border: none; padding: 15px;
+    font-family: 'Outfit', sans-serif;
+    font-size: 0.85rem; font-weight: 700;
+    letter-spacing: 0.15em; text-transform: uppercase;
+    border-radius: 2px; cursor: pointer;
+    transition: all 0.3s; width: 100%;
+    margin-top: 8px;
+  }
+  .btn-submit:hover {
+    background: var(--gold-light);
+    box-shadow: 0 6px 20px rgba(201,168,76,0.3);
+  }
+  .res-info { display: flex; flex-direction: column; gap: 32px; }
+  .info-item { display: flex; gap: 18px; align-items: flex-start; }
+  .info-icon {
+    width: 48px; height: 48px;
+    border: 1px solid rgba(201,168,76,0.3);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--gold); font-size: 1.1rem;
+    flex-shrink: 0;
+  }
+  .info-label {
+    font-size: 0.72rem; letter-spacing: 0.2em;
+    text-transform: uppercase; color: var(--text-muted);
+    margin-bottom: 4px;
+  }
+  .info-val {
+    font-size: 1rem; font-weight: 500;
+    line-height: 1.6;
+  }
+  .order-whatsapp {
+    background: var(--green);
+    color: var(--white);
+    padding: 16px 28px;
+    border-radius: 2px;
+    text-decoration: none;
+    display: flex; align-items: center; gap: 14px;
+    font-weight: 600; font-size: 1rem;
+    transition: all 0.3s;
+    margin-top: 16px;
+    box-shadow: 0 4px 20px rgba(37,211,102,0.2);
+  }
+  .order-whatsapp:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 30px rgba(37,211,102,0.35);
+  }
+  .order-whatsapp i { font-size: 1.5rem; }
+
+  /* ABOUT */
+  #about { background: var(--noir); }
+  .about-wrap {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 80px; align-items: center;
+  }
+  .about-imgs {
+    position: relative; height: 500px;
+  }
+  .about-img-1 {
+    position: absolute; left: 0; top: 0;
+    width: 72%; height: 78%;
+    object-fit: cover;
+    border: 2px solid var(--noir-3);
+  }
+  .about-img-2 {
+    position: absolute; right: 0; bottom: 0;
+    width: 56%; height: 55%;
+    object-fit: cover;
+    border: 2px solid var(--noir-3);
+  }
+  .about-badge {
+    position: absolute; left: 60%; top: 55%;
+    transform: translate(-50%, -50%);
+    width: 120px; height: 120px;
+    background: var(--gold);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    flex-direction: column; text-align: center;
+    z-index: 3;
+  }
+  .about-badge strong {
+    font-family: 'Playfair Display', serif;
+    font-size: 2rem; color: var(--noir); line-height: 1;
+  }
+  .about-badge span {
+    font-size: 0.6rem; letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--noir-2);
+    margin-top: 2px;
+  }
+  .features-list { display: flex; flex-direction: column; gap: 16px; margin-top: 32px; }
+  .feature-item {
+    display: flex; align-items: center; gap: 14px;
+    color: rgba(245,240,232,0.75); font-size: 0.92rem;
+  }
+  .feature-item i { color: var(--gold); font-size: 0.9rem; }
+
+  /* TESTIMONIALS */
+  #reviews { background: var(--noir-2); }
+  .reviews-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 24px;
+  }
+  .review-card {
+    background: var(--noir-3);
+    padding: 30px;
+    border-left: 2px solid rgba(201,168,76,0.3);
+    transition: border-color 0.3s;
+  }
+  .review-card:hover { border-color: var(--gold); }
+  .stars { color: var(--gold); font-size: 0.85rem; margin-bottom: 14px; }
+  .review-text {
+    font-size: 0.9rem; font-style: italic;
+    color: rgba(245,240,232,0.75);
+    line-height: 1.7; margin-bottom: 20px;
+  }
+  .reviewer { display: flex; align-items: center; gap: 12px; }
+  .reviewer-avatar {
+    width: 42px; height: 42px;
+    border-radius: 50%; overflow: hidden;
+    border: 1px solid rgba(201,168,76,0.3);
+  }
+  .reviewer-avatar img { width: 100%; height: 100%; object-fit: cover; }
+  .reviewer-name {
+    font-weight: 600; font-size: 0.88rem;
+    margin-bottom: 2px;
+  }
+  .reviewer-date { font-size: 0.72rem; color: var(--text-muted); }
+
+  /* SOCIAL / FOOTER */
+  .social-section {
+    background: var(--noir-3);
+    padding: 60px 8%;
+    display: flex; align-items: center;
+    justify-content: space-between; gap: 30px;
+    flex-wrap: wrap;
+  }
+  .social-text h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.6rem; margin-bottom: 6px;
+  }
+  .social-text p { color: var(--text-muted); font-size: 0.88rem; }
+  .social-icons {
+    display: flex; gap: 12px; flex-wrap: wrap;
+  }
+  .social-btn {
+    width: 52px; height: 52px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.2rem; color: var(--white);
+    text-decoration: none;
+    transition: all 0.3s; position: relative;
+    overflow: hidden;
+  }
+  .social-btn::before {
+    content: ''; position: absolute; inset: 0;
+    border-radius: 50%; transition: transform 0.3s;
+    transform: scale(0);
+  }
+  .social-btn:hover::before { transform: scale(1); }
+  .social-btn i { position: relative; z-index: 1; }
+  .social-btn:hover { transform: translateY(-4px) scale(1.1); }
+  .social-whatsapp { background: rgba(37,211,102,0.15); border: 1px solid rgba(37,211,102,0.3); }
+  .social-whatsapp::before { background: #25D366; }
+  .social-facebook { background: rgba(24,119,242,0.15); border: 1px solid rgba(24,119,242,0.3); }
+  .social-facebook::before { background: #1877F2; }
+  .social-instagram { background: rgba(228,64,95,0.15); border: 1px solid rgba(228,64,95,0.3); }
+  .social-instagram::before { background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888); }
+  .social-tiktok { background: rgba(1,1,1,0.4); border: 1px solid rgba(105,201,208,0.3); }
+  .social-tiktok::before { background: #010101; }
+  .social-tiktok:hover { color: #69C9D0; }
+  .social-youtube { background: rgba(255,0,0,0.1); border: 1px solid rgba(255,0,0,0.3); }
+  .social-youtube::before { background: #FF0000; }
+  .social-tripadvisor { background: rgba(52,168,83,0.1); border: 1px solid rgba(52,168,83,0.3); }
+  .social-tripadvisor::before { background: #34A853; }
+
+  footer {
+    background: var(--noir);
+    padding: 60px 8% 30px;
+    border-top: 1px solid rgba(201,168,76,0.1);
+  }
+  .footer-grid {
+    display: grid; grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: 48px; margin-bottom: 48px;
+  }
+  .footer-logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.8rem; font-weight: 900; color: var(--gold);
+    margin-bottom: 12px;
+  }
+  .footer-logo span { color: var(--cream); font-weight: 400; font-style: italic; }
+  .footer-desc {
+    color: var(--text-muted); font-size: 0.88rem;
+    line-height: 1.7; max-width: 260px; margin-bottom: 24px;
+  }
+  .footer-title {
+    font-size: 0.72rem; letter-spacing: 0.2em;
+    text-transform: uppercase; color: var(--gold);
+    margin-bottom: 20px;
+  }
+  .footer-links { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+  .footer-links a {
+    color: var(--text-muted); text-decoration: none;
+    font-size: 0.88rem; transition: color 0.3s;
+  }
+  .footer-links a:hover { color: var(--gold); }
+  .footer-bottom {
+    border-top: 1px solid rgba(255,255,255,0.06);
+    padding-top: 24px;
+    display: flex; justify-content: space-between; align-items: center;
+    flex-wrap: wrap; gap: 12px;
+  }
+  .footer-copy {
+    font-size: 0.78rem; color: var(--text-muted);
+  }
+  .footer-copy span { color: var(--gold); }
+
+  /* MODAL COMMANDE */
+  .modal-overlay {
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.85);
+    z-index: 8000;
+    display: flex; align-items: center; justify-content: center;
+    opacity: 0; pointer-events: none;
+    transition: opacity 0.3s;
+    padding: 20px;
+  }
+  .modal-overlay.open { opacity: 1; pointer-events: auto; }
+  .modal {
+    background: var(--noir-2);
+    border: 1px solid rgba(201,168,76,0.15);
+    padding: 40px;
+    max-width: 500px; width: 100%;
+    max-height: 85vh; overflow-y: auto;
+    transform: scale(0.9);
+    transition: transform 0.3s;
+  }
+  .modal-overlay.open .modal { transform: scale(1); }
+  .modal-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.8rem; margin-bottom: 24px;
+    color: var(--gold);
+  }
+  .cart-items { display: flex; flex-direction: column; gap: 12px; margin-bottom: 24px; }
+  .cart-item {
+    display: flex; justify-content: space-between;
+    align-items: center; padding: 12px;
+    background: var(--noir-3);
+    border-radius: 2px;
+  }
+  .cart-item-name { font-weight: 500; font-size: 0.9rem; }
+  .cart-item-price { color: var(--gold); font-weight: 600; }
+  .cart-item-remove {
+    background: none; border: none;
+    color: var(--text-muted); cursor: pointer;
+    transition: color 0.2s; font-size: 1rem;
+  }
+  .cart-item-remove:hover { color: var(--red); }
+  .cart-total {
+    display: flex; justify-content: space-between;
+    padding: 16px 0;
+    border-top: 1px solid rgba(255,255,255,0.08);
+    font-family: 'Playfair Display', serif;
+    font-size: 1.2rem;
+    margin-bottom: 20px;
+  }
+  .cart-total span:last-child { color: var(--gold); }
+  .cart-actions { display: flex; gap: 12px; flex-direction: column; }
+  .btn-wa {
+    background: var(--green);
+    color: var(--white);
+    border: none; padding: 14px;
+    border-radius: 2px; cursor: pointer;
+    font-family: 'Outfit', sans-serif;
+    font-size: 0.9rem; font-weight: 600;
+    display: flex; align-items: center; justify-content: center; gap: 10px;
+    transition: all 0.3s;
+  }
+  .btn-wa:hover { background: #1DA851; }
+  .btn-cancel {
+    background: transparent;
+    color: var(--text-muted);
+    border: 1px solid rgba(255,255,255,0.1);
+    padding: 12px; border-radius: 2px;
+    cursor: pointer; font-family: 'Outfit', sans-serif;
+    font-size: 0.85rem; transition: all 0.3s;
+  }
+  .btn-cancel:hover { border-color: var(--gold); color: var(--gold); }
+
+  /* SUCCESS TOAST */
+  .toast {
+    position: fixed; bottom: 100px; left: 50%;
+    transform: translateX(-50%) translateY(20px);
+    background: var(--noir-3);
+    border: 1px solid rgba(201,168,76,0.3);
+    border-left: 3px solid var(--gold);
+    color: var(--cream); padding: 14px 24px;
+    border-radius: 2px; font-size: 0.88rem;
+    opacity: 0; transition: all 0.3s; z-index: 9000;
+    white-space: nowrap;
+  }
+  .toast.show {
+    opacity: 1; transform: translateX(-50%) translateY(0);
+  }
+
+  /* ANIMATIONS */
+  @keyframes fadeUp {
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .reveal {
+    opacity: 0; transform: translateY(40px);
+    transition: opacity 0.7s, transform 0.7s;
+  }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+  .reveal-delay-1 { transition-delay: 0.1s; }
+  .reveal-delay-2 { transition-delay: 0.2s; }
+  .reveal-delay-3 { transition-delay: 0.3s; }
+
+  /* RESPONSIVE */
+  @media (max-width: 1024px) {
+    .reservation-wrap { grid-template-columns: 1fr; gap: 50px; }
+    .about-wrap { grid-template-columns: 1fr; gap: 50px; }
+    .about-imgs { height: 400px; }
+    .footer-grid { grid-template-columns: 1fr 1fr; }
+    .hero-ornament { display: none; }
+    .gallery-grid { grid-template-columns: repeat(6, 1fr); }
+    .gallery-item:nth-child(1) { grid-column: 1/4; grid-row: 1/3; }
+    .gallery-item:nth-child(2) { grid-column: 4/7; grid-row: 1/2; }
+    .gallery-item:nth-child(3) { grid-column: 4/7; grid-row: 2/3; }
+    .gallery-item:nth-child(4) { grid-column: 1/3; grid-row: 3/4; }
+    .gallery-item:nth-child(5) { grid-column: 3/5; grid-row: 3/4; }
+    .gallery-item:nth-child(6) { grid-column: 5/7; grid-row: 3/4; }
+    .gallery-item:nth-child(7), .gallery-item:nth-child(8) { display: none; }
+  }
+  @media (max-width: 768px) {
+    section { padding: 70px 6%; }
+    nav { padding: 0 6%; }
+    .nav-links { display: none; }
+    .hamburger { display: flex; }
+    .hero-stats { gap: 30px; }
+    .res-form { grid-template-columns: 1fr; }
+    .res-form .full { grid-column: 1; }
+    .footer-grid { grid-template-columns: 1fr; gap: 32px; }
+    .gallery-grid { grid-template-columns: repeat(2,1fr); grid-template-rows: auto; }
+    .gallery-item { grid-column: auto !important; grid-row: auto !important; height: 200px; }
+    .gallery-item:nth-child(7), .gallery-item:nth-child(8) { display: block; }
+    .social-section { flex-direction: column; text-align: center; }
+  }
+  @media (max-width: 480px) {
+    .hero-title { font-size: 2.2rem; }
+    .hero-actions { flex-direction: column; }
+    .btn-primary, .btn-outline { justify-content: center; }
+    .menu-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- CURSOR -->
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- LOADER -->
+<div class="loader" id="loader">
+  <div class="loader-logo">LE FESTIN</div>
+  <div class="loader-bar"><div class="loader-fill"></div></div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<!-- NAVBAR -->
+<nav id="navbar">
+  <a href="#" class="nav-logo">LE <span>Festin</span></a>
+  <ul class="nav-links">
+    <li><a href="#menu">Menu</a></li>
+    <li><a href="#gallery">Galerie</a></li>
+    <li><a href="#about">À Propos</a></li>
+    <li><a href="#reviews">Avis</a></li>
+    <li><a href="#reservation" class="nav-cta">Réserver</a></li>
+  </ul>
+  <div class="hamburger" id="hamburger" onclick="toggleMenu()">
+    <span></span><span></span><span></span>
+  </div>
+</nav>
+
+<!-- MOBILE MENU -->
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#menu" onclick="toggleMenu()">Menu</a>
+  <a href="#gallery" onclick="toggleMenu()">Galerie</a>
+  <a href="#about" onclick="toggleMenu()">À Propos</a>
+  <a href="#reviews" onclick="toggleMenu()">Avis</a>
+  <a href="#reservation" onclick="toggleMenu()">Réserver</a>
+</div>
+
+<!-- HERO -->
+<section class="hero" id="home">
+  <div class="hero-bg"></div>
+  <div class="hero-ornament"></div>
+  <div class="hero-content">
+    <div class="hero-tag">Restaurant Gastronomique</div>
+    <h1 class="hero-title">
+      L'Art de la<br>
+      <em>Gastronomie</em>
+      Authentique
+    </h1>
+    <p class="hero-desc">Une expérience culinaire d'exception au cœur de la ville. Saveurs raffinées, ambiance élégante et service irréprochable.</p>
+    <div class="hero-actions">
+      <a href="#menu" class="btn-primary"><i class="fas fa-utensils"></i> Voir le Menu</a>
+      <a href="#reservation" class="btn-outline"><i class="far fa-calendar-alt"></i> Réserver une Table</a>
+    </div>
+  </div>
+  <div class="hero-stats">
+    <div class="stat-item">
+      <span class="stat-num">15+</span>
+      <div class="stat-label">Années d'Excellence</div>
+    </div>
+    <div class="stat-item">
+      <span class="stat-num">4.9</span>
+      <div class="stat-label">Note Google</div>
+    </div>
+    <div class="stat-item">
+      <span class="stat-num">200+</span>
+      <div class="stat-label">Plats Signatures</div>
+    </div>
+    <div class="stat-item">
+      <span class="stat-num">50k</span>
+      <div class="stat-label">Clients Satisfaits</div>
+    </div>
+  </div>
+</section>
+
+<!-- MENU DIGITAL -->
+<section id="menu">
+  <div class="reveal">
+    <div class="section-tag">Menu Digital</div>
+    <h2 class="section-title">Notre Sélection<br>du Chef</h2>
+    <div class="gold-line"></div>
+  </div>
+  <div class="menu-tabs reveal reveal-delay-1">
+    <button class="tab-btn active" onclick="filterMenu('tous', this)">Tous</button>
+    <button class="tab-btn" onclick="filterMenu('entrees', this)">Entrées</button>
+    <button class="tab-btn" onclick="filterMenu('plats', this)">Plats</button>
+    <button class="tab-btn" onclick="filterMenu('burgers', this)">Burgers</button>
+    <button class="tab-btn" onclick="filterMenu('desserts', this)">Desserts</button>
+    <button class="tab-btn" onclick="filterMenu('boissons', this)">Boissons</button>
+  </div>
+  <div class="menu-grid" id="menuGrid">
+
+    <div class="menu-item visible" data-cat="entrees">
+      <img class="menu-img" src="https://images.unsplash.com/photo-1608039829572-78524f79c4c7?w=600&q=80" alt="Salade César">
+      <span class="menu-badge">Populaire</span>
+      <div class="menu-info">
+        <div class="menu-cat">Entrée</div>
+        <div class="menu-name">Salade César Royale</div>
+        <div class="menu-desc">Romaine croquante, copeaux de parmesan 24 mois, croûtons dorés, sauce César maison</div>
+        <div class="menu-footer">
+          <div class="menu-price">12,50 <span>€</span></div>
+          <button class="add-btn" onclick="addToCart('Salade César Royale', 12.50)"><i class="fas fa-plus"></i></button>
+        </div>
+      </div>
+    </div>
+
+    <div class="menu-item visible" data-cat="entrees">
+      <img class="menu-img" src="https://images.unsplash.com/photo-1547592166-23ac45744acd?w=600&q=80" alt="Soupe">
+      <div class="menu-info">
+        <div class="menu-cat">Entrée</div>
+        <div class="menu-name">Velouté de Champignons</div>
+        <div class="menu-desc">Crème de champignons forestiers, truffe noire râpée, huile de noisette grillée</div>
+        <div class="menu-footer">
+          <div class="menu-price">9,00 <span>€</span></div>
+          <button class="add-btn" onclick="addToCart('Velouté de Champignons', 9.00)"><i class="fas fa-plus"></i></button>
+        </div>
+      </div>
+    </div>
+
+    <div class="menu-item visible" data-cat="plats">
+      <img class="menu-img" src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=600&q=80" alt="Entrecôte">
+      <span class="menu-badge">Chef's Choice</span>
+      <div class="menu-info">
+        <div class="menu-cat">Plat Principal</div>
+        <div class="menu-name">Entrecôte Premium 300g</div>
+        <div class="menu-desc">Bœuf maturé 45 jours, beurre maître d'hôtel, frites maison, sauce au poivre vert</div>
+        <div class="menu-footer">
+          <div class="menu-price">32,00 <span>€</span></div>
+          <button class="add-btn" onclick="addToCart('Entrecôte Premium 300g', 32.00)"><i class="fas fa-plus"></i></button>
+        </div>
+      </div>
+    </div>
+
+    <div class="menu-item visible" data-cat="plats">
+      <img class="menu-img" src="https://images.unsplash.com/photo-1519984388953-d2406bc725e1?w=600&q=80" alt="Saumon">
+      <div class="menu-info">
+        <div class="menu-cat">Plat Principal</div>
+        <div class="menu-name">Pavé de Saumon Rôti</div>
+        <div class="menu-desc">Saumon Atlantique, risotto au citron confit, émulsion de fenouil, caviar d'Aquitaine</div>
+        <div class="menu-footer">
+          <div class="menu-price">26,00 <span>€</span></div>
+          <button class="add-btn" onclick="addToCart('Pavé de Saumon Rôti', 26.00)"><i class="fas fa-plus"></i></button>
+        </div>
+      </div>
+    </div>
+
+    <div class="menu-item visible" data-cat="burgers">
+      <img class="menu-img" src="https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=600&q=80" alt="Burger">
+      <span class="menu-badge new">Nouveau</span>
+      <div class="menu-info">
+        <div class="menu-cat">Burger</div>
+        <div class="menu-name">Le Black Angus Gourmet</div>
+        <div class="menu-desc">Steak haché Black Angus 180g, cheddar affiné, bacon fumé, oignons caramélisés, sauce secrète</div>
+        <div class="menu-footer">
+          <div class="menu-price">18,50 <span>€</span></div>
+          <button class="add-btn" onclick="addToCart('Le Black Angus Gourmet', 18.50)"><i class="fas fa-plus"></i></button>
+        </div>
+      </div>
+    </div>
+
+    <div class="menu-item visible" data-cat="burgers">
+      <img class="menu-img" src="https://images.unsplash.com/photo-1553979459-d2229ba7433b?w=600&q=80" alt="Burger végé">
+      <div class="menu-info">
+        <div class="menu-cat">Burger</div>
+        <div class="menu-name">The Garden King</div>
+        <div class="menu-desc">Galette végétale maison, guacamole frais, tomate cœur de bœuf, pickles, mayo siracha</div>
+        <div class="menu-footer">
+          <div class="menu-price">15,00 <span>€</span></div>
+          <button class="add-btn" onclick="addToCart('The Garden King', 15.00)"><i class="fas fa-plus"></i></button>
+        </div>
+      </div>
+    </div>
+
+    <div class="menu-item visible" data-cat="desserts">
+      <img class="menu-img" src="https://images.unsplash.com/photo-1551024601-bec78aea704b?w=600&q=80" alt="Dessert">
+      <span class="menu-badge">Best-seller</span>
+      <div class="menu-info">
+        <div class="menu-cat">Dessert</div>
+        <div class="menu-name">Fondant Chocolat Guanaja</div>
+        <div class="menu-desc">Chocolat noir 70%, cœur coulant caramel beurre salé, glace vanille Bourbon</div>
+        <div class="menu-footer">
+          <div class="menu-price">10,00 <span>€</span></div>
+          <button class="add-btn" onclick="addToCart('Fondant Chocolat', 10.00)"><i class="fas fa-plus"></i></button>
+        </div>
+      </div>
+    </div>
+
+    <div class="menu-item visible" data-cat="desserts">
+      <img class="menu-img" src="https://images.unsplash.com/photo-1488477181946-6428a0291777?w=600&q=80" alt="Tarte">
+      <div class="menu-info">
+        <div class="menu-cat">Dessert</div>
+        <div class="menu-name">Tarte Citron Meringuée</div>
+        <div class="menu-desc">Pâte sablée maison, crème citron Meyer, meringue italienne au chalumeau</div>
+        <div class="menu-footer">
+          <div class="menu-price">8,50 <span>€</span></div>
+          <button class="add-btn" onclick="addToCart('Tarte Citron Meringuée', 8.50)"><i class="fas fa-plus"></i></button>
+        </div>
+      </div>
+    </div>
+
+    <div class="menu-item visible" data-cat="boissons">
+      <img class="menu-img" src="https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?w=600&q=80" alt="Cocktail">
+      <div class="menu-info">
+        <div class="menu-cat">Boisson</div>
+        <div class="menu-name">Cocktail Signature Maison</div>
+        <div class="menu-desc">Rhum ambré, mangue fraîche, gingembre, citron vert, sirop de canne artisanal</div>
+        <div class="menu-footer">
+          <div class="menu-price">11,00 <span>€</span></div>
+          <button class="add-btn" onclick="addToCart('Cocktail Signature', 11.00)"><i class="fas fa-plus"></i></button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ORDER BAR -->
+<div class="order-bar" id="orderBar" onclick="openModal()">
+  <i class="fas fa-shopping-bag"></i>
+  <span>Voir ma commande</span>
+  <div class="order-count" id="orderCount">0</div>
+</div>
+
+<!-- GALERIE -->
+<section id="gallery">
+  <div class="reveal" style="margin-bottom:50px;">
+    <div class="section-tag">Notre Galerie</div>
+    <h2 class="section-title">Nos Créations<br>Culinaires</h2>
+    <div class="gold-line"></div>
+  </div>
+  <div class="gallery-grid reveal">
+    <div class="gallery-item" onclick="openLightbox('https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=1200&q=80')">
+      <img class="gallery-img" src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=800&q=80" alt="Plat gastronomique">
+      <div class="gallery-overlay"><i class="fas fa-expand"></i></div>
+    </div>
+    <div class="gallery-item" onclick="openLightbox('https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=1200&q=80')">
+      <img class="gallery-img" src="https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=600&q=80" alt="Restaurant">
+      <div class="gallery-overlay"><i class="fas fa-expand"></i></div>
+    </div>
+    <div class="gallery-item" onclick="openLightbox('https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?w=1200&q=80')">
+      <img class="gallery-img" src="https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?w=600&q=80" alt="Plat">
+      <div class="gallery-overlay"><i class="fas fa-expand"></i></div>
+    </div>
+    <div class="gallery-item" onclick="openLightbox('https://images.unsplash.com/photo-1540189549336-e6e99c3679fe?w=1200&q=80')">
+      <img class="gallery-img" src="https://images.unsplash.com/photo-1540189549336-e6e99c3679fe?w=600&q=80" alt="Salade">
+      <div class="gallery-overlay"><i class="fas fa-expand"></i></div>
+    </div>
+    <div class="gallery-item" onclick="openLightbox('https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=1200&q=80')">
+      <img class="gallery-img" src="https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=600&q=80" alt="Pizza">
+      <div class="gallery-overlay"><i class="fas fa-expand"></i></div>
+    </div>
+    <div class="gallery-item" onclick="openLightbox('https://images.unsplash.com/photo-1482049016688-2d3e1b311543?w=1200&q=80')">
+      <img class="gallery-img" src="https://images.unsplash.com/photo-1482049016688-2d3e1b311543?w=600&q=80" alt="Petit déjeuner">
+      <div class="gallery-overlay"><i class="fas fa-expand"></i></div>
+    </div>
+    <div class="gallery-item" onclick="openLightbox('https://images.unsplash.com/photo-1476224203421-9ac39bcb3327?w=1200&q=80')">
+      <img class="gallery-img" src="https://images.unsplash.com/photo-1476224203421-9ac39bcb3327?w=600&q=80" alt="Burger">
+      <div class="gallery-overlay"><i class="fas fa-expand"></i></div>
+    </div>
+    <div class="gallery-item" onclick="openLightbox('https://images.unsplash.com/photo-1606787366850-de6330128bfc?w=1200&q=80')">
+      <img class="gallery-img" src="https://images.unsplash.com/photo-1606787366850-de6330128bfc?w=600&q=80" alt="Fruits">
+      <div class="gallery-overlay"><i class="fas fa-expand"></i></div>
+    </div>
+  </div>
+</section>
+
+<!-- LIGHTBOX -->
+<div class="lightbox" id="lightbox" onclick="closeLightbox()">
+  <span class="lightbox-close"><i class="fas fa-times"></i></span>
+  <img id="lightboxImg" src="" alt="Zoom">
+</div>
+
+<!-- RESERVATION -->
+<section id="reservation">
+  <div class="reveal">
+    <div class="section-tag">Réservation</div>
+    <h2 class="section-title">Réservez<br>Votre Table</h2>
+    <div class="gold-line"></div>
+  </div>
+  <div class="reservation-wrap">
+    <div class="reveal">
+      <p class="section-sub">Garantissez votre place pour une expérience inoubliable. Remplissez le formulaire et nous vous confirmons votre réservation sous 24h.</p>
+      <form class="res-form" onsubmit="submitReservation(event)">
+        <div class="form-group">
+          <label class="form-label">Prénom</label>
+          <input type="text" class="form-input" placeholder="Jean" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Nom</label>
+          <input type="text" class="form-input" placeholder="Dupont" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Email</label>
+          <input type="email" class="form-input" placeholder="jean@exemple.fr" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Téléphone</label>
+          <input type="tel" class="form-input" placeholder="+33 6 00 00 00 00" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Date</label>
+          <input type="date" class="form-input" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Heure</label>
+          <select class="form-input" required>
+            <option value="">Choisir...</option>
+            <option>12:00</option><option>12:30</option>
+            <option>13:00</option><option>13:30</option>
+            <option>19:00</option><option>19:30</option>
+            <option>20:00</option><option>20:30</option>
+            <option>21:00</option>
+          </select>
+        </div>
+        <div class="form-group full">
+          <label class="form-label">Nombre de Couverts</label>
+          <select class="form-input" required>
+            <option value="">Choisir...</option>
+            <option>1 personne</option>
+            <option>2 personnes</option>
+            <option>3 personnes</option>
+            <option>4 personnes</option>
+            <option>5 personnes</option>
+            <option>6+ personnes</option>
+          </select>
+        </div>
+        <div class="form-group full">
+          <label class="form-label">Message (optionnel)</label>
+          <textarea class="form-input" rows="3" placeholder="Anniversaire, allergies, demande spéciale..."></textarea>
+        </div>
+        <button type="submit" class="btn-submit full">
+          <i class="fas fa-check"></i> Confirmer la Réservation
+        </button>
+      </form>
+    </div>
+    <div class="res-info reveal reveal-delay-2">
+      <div class="info-item">
+        <div class="info-icon"><i class="fas fa-map-marker-alt"></i></div>
+        <div>
+          <div class="info-label">Adresse</div>
+          <div class="info-val">12 Rue de la Gastronomie<br>75001 Paris, France</div>
+        </div>
+      </div>
+      <div class="info-item">
+        <div class="info-icon"><i class="fas fa-clock"></i></div>
+        <div>
+          <div class="info-label">Horaires</div>
+          <div class="info-val">Lun – Sam : 12h – 14h30 & 19h – 23h<br>Dimanche : 12h – 15h</div>
+        </div>
+      </div>
+      <div class="info-item">
+        <div class="info-icon"><i class="fas fa-phone"></i></div>
+        <div>
+          <div class="info-label">Téléphone</div>
+          <div class="info-val">+33 1 23 45 67 89</div>
+        </div>
+      </div>
+      <div class="info-item">
+        <div class="info-icon"><i class="fas fa-envelope"></i></div>
+        <div>
+          <div class="info-label">Email</div>
+          <div class="info-val">contact@lefestin.fr</div>
+        </div>
+      </div>
+      <a href="https://wa.me/33123456789?text=Bonjour%2C%20je%20souhaite%20commander%20ou%20réserver%20une%20table%20au%20restaurant%20Le%20Festin." 
+         class="order-whatsapp" target="_blank">
+        <i class="fab fa-whatsapp"></i>
+        Commander sur WhatsApp
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="about-wrap">
+    <div class="about-imgs reveal">
+      <img class="about-img-1" src="https://images.unsplash.com/photo-1424847651672-bf20a4b0982b?w=600&q=80" alt="Chef">
+      <img class="about-img-2" src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=400&q=80" alt="Plat">
+      <div class="about-badge">
+        <strong>15</strong>
+        <span>Ans<br>d'expérience</span>
+      </div>
+    </div>
+    <div class="reveal reveal-delay-2">
+      <div class="section-tag">Notre Histoire</div>
+      <h2 class="section-title">La Passion<br>au Cœur<br><em style="color:var(--gold);font-style:italic;">du Festin</em></h2>
+      <div class="gold-line"></div>
+      <p style="color:rgba(245,240,232,0.7);line-height:1.8;font-size:0.95rem;margin-bottom:24px;">
+        Fondé en 2009 par le Chef Antoine Moreau, Le Festin est né d'une passion ardente pour la gastronomie française revisitée. Chaque plat est une œuvre pensée, préparée avec des ingrédients soigneusement sélectionnés auprès de producteurs locaux.
+      </p>
+      <p style="color:rgba(245,240,232,0.7);line-height:1.8;font-size:0.95rem;margin-bottom:32px;">
+        Notre philosophie : marier tradition et modernité pour offrir une expérience sensorielle unique, dans un cadre élégant qui invite à la détente et au plaisir partagé.
+      </p>
+      <div class="features-list">
+        <div class="feature-item"><i class="fas fa-check"></i> Produits frais & locaux sourcés quotidiennement</div>
+        <div class="feature-item"><i class="fas fa-check"></i> Menu renouvelé chaque saison</div>
+        <div class="feature-item"><i class="fas fa-check"></i> Cave à vins plus de 150 références</div>
+        <div class="feature-item"><i class="fas fa-check"></i> Service privatif & événements sur mesure</div>
+        <div class="feature-item"><i class="fas fa-check"></i> Options végétariennes & sans gluten disponibles</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- REVIEWS -->
+<section id="reviews">
+  <div class="reveal" style="margin-bottom:50px;">
+    <div class="section-tag">Témoignages</div>
+    <h2 class="section-title">Ce que Disent<br>Nos Clients</h2>
+    <div class="gold-line"></div>
+  </div>
+  <div class="reviews-grid">
+    <div class="review-card reveal">
+      <div class="stars">★★★★★</div>
+      <p class="review-text">"Une expérience gastronomique exceptionnelle ! Le fondant au chocolat était à tomber, et le service absolument impeccable. On reviendra sans hésiter."</p>
+      <div class="reviewer">
+        <div class="reviewer-avatar"><img src="https://i.pravatar.cc/80?img=1" alt="Marie"></div>
+        <div>
+          <div class="reviewer-name">Marie Lefebvre</div>
+          <div class="reviewer-date">Il y a 2 semaines · Google</div>
+        </div>
+      </div>
+    </div>
+    <div class="review-card reveal reveal-delay-1">
+      <div class="stars">★★★★★</div>
+      <p class="review-text">"Le meilleur burger que j'aie mangé à Paris. Le Black Angus Gourmet est une véritable révélation. L'ambiance est incroyable, feutré et chic."</p>
+      <div class="reviewer">
+        <div class="reviewer-avatar"><img src="https://i.pravatar.cc/80?img=12" alt="Thomas"></div>
+        <div>
+          <div class="reviewer-name">Thomas Girard</div>
+          <div class="reviewer-date">Il y a 1 mois · TripAdvisor</div>
+        </div>
+      </div>
+    </div>
+    <div class="review-card reveal reveal-delay-2">
+      <div class="stars">★★★★★</div>
+      <p class="review-text">"Réservation facile, accueil chaleureux, cuisine raffinée. J'ai fêté mon anniversaire ici et tout était parfait. Merci à toute l'équipe !"</p>
+      <div class="reviewer">
+        <div class="reviewer-avatar"><img src="https://i.pravatar.cc/80?img=5" alt="Sophie"></div>
+        <div>
+          <div class="reviewer-name">Sophie Martin</div>
+          <div class="reviewer-date">Il y a 3 semaines · Google</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SOCIAL SECTION -->
+<div class="social-section">
+  <div class="social-text">
+    <h3>Suivez-nous</h3>
+    <p>Rejoignez notre communauté et partagez vos moments gourmands</p>
+  </div>
+  <div class="social-icons">
+    <a href="https://wa.me/33123456789" class="social-btn social-whatsapp" target="_blank" title="WhatsApp">
+      <i class="fab fa-whatsapp"></i>
+    </a>
+    <a href="https://facebook.com/lefestin" class="social-btn social-facebook" target="_blank" title="Facebook">
+      <i class="fab fa-facebook-f"></i>
+    </a>
+    <a href="https://instagram.com/lefestin" class="social-btn social-instagram" target="_blank" title="Instagram">
+      <i class="fab fa-instagram"></i>
+    </a>
+    <a href="https://tiktok.com/@lefestin" class="social-btn social-tiktok" target="_blank" title="TikTok">
+      <i class="fab fa-tiktok"></i>
+    </a>
+    <a href="https://youtube.com/@lefestin" class="social-btn social-youtube" target="_blank" title="YouTube">
+      <i class="fab fa-youtube"></i>
+    </a>
+    <a href="https://tripadvisor.com" class="social-btn social-tripadvisor" target="_blank" title="TripAdvisor">
+      <i class="fas fa-utensils"></i>
+    </a>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-grid">
+    <div>
+      <div class="footer-logo">LE <span>Festin</span></div>
+      <p class="footer-desc">Une adresse incontournable pour les amoureux de la gastronomie française. Excellence, passion et authenticité depuis 2009.</p>
+      <div class="social-icons">
+        <a href="https://wa.me/33123456789" class="social-btn social-whatsapp" target="_blank" style="width:40px;height:40px;font-size:1rem;">
+          <i class="fab fa-whatsapp"></i>
+        </a>
+        <a href="https://facebook.com" class="social-btn social-facebook" target="_blank" style="width:40px;height:40px;font-size:1rem;">
+          <i class="fab fa-facebook-f"></i>
+        </a>
+        <a href="https://instagram.com" class="social-btn social-instagram" target="_blank" style="width:40px;height:40px;font-size:1rem;">
+          <i class="fab fa-instagram"></i>
+        </a>
+        <a href="https://tiktok.com" class="social-btn social-tiktok" target="_blank" style="width:40px;height:40px;font-size:1rem;">
+          <i class="fab fa-tiktok"></i>
+        </a>
+      </div>
+    </div>
+    <div>
+      <div class="footer-title">Navigation</div>
+      <ul class="footer-links">
+        <li><a href="#home">Accueil</a></li>
+        <li><a href="#menu">Menu</a></li>
+        <li><a href="#gallery">Galerie</a></li>
+        <li><a href="#about">À Propos</a></li>
+        <li><a href="#reservation">Réservation</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-title">Services</div>
+      <ul class="footer-links">
+        <li><a href="#">Dîner sur place</a></li>
+        <li><a href="#">À emporter</a></li>
+        <li><a href="#">Livraison</a></li>
+        <li><a href="#">Privatisation</a></li>
+        <li><a href="#">Traiteur</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-title">Contact</div>
+      <ul class="footer-links">
+        <li><a href="#">12 Rue de la Gastronomie</a></li>
+        <li><a href="#">75001 Paris, France</a></li>
+        <li><a href="tel:+33123456789">+33 1 23 45 67 89</a></li>
+        <li><a href="mailto:contact@lefestin.fr">contact@lefestin.fr</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <div class="footer-copy">© 2026 <span>Le Festin</span>. Tous droits réservés.</div>
+    <div class="footer-copy">Mentions légales · Politique de confidentialité</div>
+  </div>
+</footer>
+
+<!-- MODAL COMMANDE -->
+<div class="modal-overlay" id="modalOverlay" onclick="closeModalOutside(event)">
+  <div class="modal">
+    <div class="modal-title">🛒 Ma Commande</div>
+    <div class="cart-items" id="cartItems"></div>
+    <div class="cart-total">
+      <span>Total</span>
+      <span id="cartTotal">0,00 €</span>
+    </div>
+    <div class="cart-actions">
+      <button class="btn-wa" onclick="orderWhatsApp()">
+        <i class="fab fa-whatsapp" style="font-size:1.4rem;"></i>
+        Commander sur WhatsApp
+      </button>
+      <button class="btn-cancel" onclick="closeModal()">Continuer mes achats</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  // CURSOR
+  const cursor = document.getElementById('cursor');
+  const ring = document.getElementById('cursorRing');
+  document.addEventListener('mousemove', e => {
+    cursor.style.left = e.clientX + 'px';
+    cursor.style.top = e.clientY + 'px';
+    setTimeout(() => {
+      ring.style.left = e.clientX + 'px';
+      ring.style.top = e.clientY + 'px';
+    }, 80);
+  });
+  document.querySelectorAll('a,button').forEach(el => {
+    el.addEventListener('mouseenter', () => {
+      cursor.style.width = '18px'; cursor.style.height = '18px';
+      ring.style.width = '50px'; ring.style.height = '50px';
+    });
+    el.addEventListener('mouseleave', () => {
+      cursor.style.width = '10px'; cursor.style.height = '10px';
+      ring.style.width = '36px'; ring.style.height = '36px';
+    });
+  });
+
+  // LOADER
+  window.addEventListener('load', () => {
+    setTimeout(() => {
+      document.getElementById('loader').classList.add('hidden');
+    }, 2000);
+  });
+
+  // NAVBAR SCROLL
+  window.addEventListener('scroll', () => {
+    const nav = document.getElementById('navbar');
+    nav.classList.toggle('scrolled', window.scrollY > 60);
+  });
+
+  // MOBILE MENU
+  function toggleMenu() {
+    document.getElementById('hamburger').classList.toggle('active');
+    document.getElementById('mobileMenu').classList.toggle('active');
+  }
+
+  // REVEAL ON SCROLL
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.1 });
+  reveals.forEach(r => observer.observe(r));
+
+  // MENU FILTER
+  function filterMenu(cat, btn) {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll('.menu-item').forEach(item => {
+      if (cat === 'tous' || item.dataset.cat === cat) {
+        item.classList.add('visible');
+      } else {
+        item.classList.remove('visible');
+      }
+    });
+  }
+
+  // CART
+  let cart = [];
+  function addToCart(name, price) {
+    cart.push({ name, price });
+    updateOrderBar();
+    showToast(`✓ ${name} ajouté`);
+  }
+  function updateOrderBar() {
+    const bar = document.getElementById('orderBar');
+    document.getElementById('orderCount').textContent = cart.length;
+    bar.classList.toggle('visible', cart.length > 0);
+  }
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 2500);
+  }
+
+  // MODAL
+  function openModal() {
+    if (cart.length === 0) return;
+    const ci = document.getElementById('cartItems');
+    ci.innerHTML = '';
+    let total = 0;
+    cart.forEach((item, i) => {
+      total += item.price;
+      ci.innerHTML += `
+        <div class="cart-item">
+          <span class="cart-item-name">${item.name}</span>
+          <span class="cart-item-price">${item.price.toFixed(2)} €</span>
+          <button class="cart-item-remove" onclick="removeItem(${i})"><i class="fas fa-times"></i></button>
+        </div>`;
+    });
+    document.getElementById('cartTotal').textContent = total.toFixed(2) + ' €';
+    document.getElementById('modalOverlay').classList.add('open');
+  }
+  function removeItem(i) {
+    cart.splice(i, 1);
+    updateOrderBar();
+    openModal();
+    if (cart.length === 0) closeModal();
+  }
+  function closeModal() {
+    document.getElementById('modalOverlay').classList.remove('open');
+  }
+  function closeModalOutside(e) {
+    if (e.target === document.getElementById('modalOverlay')) closeModal();
+  }
+
+  // WHATSAPP ORDER
+  function orderWhatsApp() {
+    if (!cart.length) return;
+    let msg = 'Bonjour 👋, je souhaite commander :%0A%0A';
+    let total = 0;
+    cart.forEach(item => {
+      msg += `• ${item.name} — ${item.price.toFixed(2)} €%0A`;
+      total += item.price;
+    });
+    msg += `%0A*Total : ${total.toFixed(2)} €*%0A%0AMerci !`;
+    window.open(`https://wa.me/33123456789?text=${msg}`, '_blank');
+  }
+
+  // RESERVATION
+  function submitReservation(e) {
+    e.preventDefault();
+    showToast('✓ Réservation envoyée ! Nous vous confirmons sous 24h.');
+    e.target.reset();
+    setTimeout(() => document.getElementById('toast').classList.remove('show'), 3500);
+  }
+
+  // LIGHTBOX
+  function openLightbox(src) {
+    document.getElementById('lightboxImg').src = src;
+    document.getElementById('lightbox').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeLightbox() {
+    document.getElementById('lightbox').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLightbox(); });
+</script>
+</body>
+</html>
